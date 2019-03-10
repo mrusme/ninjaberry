@@ -23,7 +23,9 @@ from ui.ui_line import UILine
 from ui.ui_list import UIList
 
 from views.view_logo import ViewLogo
+
 from views.view_wifi import ViewWifi
+from views.view_wifi_scan_aps import ViewWifiScanAps
 
 class UI:
     def __init__(self):
@@ -75,7 +77,8 @@ class UI:
         self._router = UIRouter(display=self._display, inputs=self._inputs, outputs=self._outputs)
         self._router.views = {
             'logo': ViewLogo(resources=self._resources, event_handler=self._router.element_event_handler),
-            'wifi': ViewWifi(resources=self._resources, event_handler=self._router.element_event_handler)
+            'wifi': ViewWifi(resources=self._resources, event_handler=self._router.element_event_handler),
+            'wifi_scan_aps': ViewWifiScanAps(resources=self._resources, event_handler=self._router.element_event_handler)
         }
 
     def destroy(self):
