@@ -60,3 +60,9 @@ class ViewWifi(View):
 
     def callback(self, screen, event = None):
         draw = ImageDraw.Draw(screen)
+
+    def event(self, element_id, event, next, payload={}):
+        self._partial_menu.event(element_id=element_id, event=event, next=next, payload=payload)
+
+        if element_id == 'button_scan_aps' and event == 'clicked':
+            return self._event_handler(element_id=element_id, event='navigate', next=None, payload={ 'to': 'wifi_scan_aps' })
