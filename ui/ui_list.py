@@ -44,6 +44,16 @@ class UIList(UIElement):
     def selected(self, value):
         self._selected = value
 
+    @property
+    def selected_id(self):
+        (entry_id, entry_label) = self._getIdAndLabelFromEntry(self._entries[self._selected])
+        return entry_id
+
+    @property
+    def selected_label(self):
+        (entry_id, entry_label) = self._getIdAndLabelFromEntry(self._entries[self._selected])
+        return entry_label
+
     def select_previous(self):
         self._selected = self._selected - 1
 
@@ -59,6 +69,22 @@ class UIList(UIElement):
             self._selected = 0
 
         return self._selected
+
+    def _getIdAndLabelFromEntry(self, entry):
+        # An entry could either be a simple string or a dict with props:
+        # { 'id': 123, 'label': 'Test Entry' }
+        entry_id = None
+        entry_label = None
+        if type(entry) is str:
+            entry_id = entry
+            entry_label = entry
+        elif type(entry) is dict and 'label' in entry and 'id' in entry:
+            entry_id = entry['id']
+            entry_label = entry['label']
+        else:
+            entry_id = '(DEVELOPER FUCKED UP)'
+            entry_label = '(DEVELOPER FUCKED UP)'
+        return (entry_id, entry_label)
 
     def render(self, screen):
         draw = ImageDraw.Draw(screen)
@@ -83,7 +109,10 @@ class UIList(UIElement):
             selected = True if iterator == self._selected else False
             selector = '» ' if selected else '  '
 
-            entry_string = selector + self._entries[iterator]
+            # An entry could either be a simple string or a dict with props:
+            # { 'id': 123, 'label': 'Test Entry' }
+            (entry_id, entry_label) = self._getIdAndLabelFromEntry(entry)
+            entry_string = selector + entry_label
             entry_string_size = self._resources['font']['ttf'].getsize(entry_string)
 
             w = entry_string_size[0]
@@ -92,6 +121,7 @@ class UIList(UIElement):
             om = {
                 'index': iterator,
                 'selected': selected,
+                'id': entry_id,
                 'label': entry_string,
                 'w': w,
                 'h': h
