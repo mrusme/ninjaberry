@@ -174,3 +174,7 @@ class DisplaySSD1306:
                 contrast = 0x9F
             else:
                 contrast = 0xCF
+
+    def destroy(self):
+        self.reset()
+        GPIO.cleanup()
