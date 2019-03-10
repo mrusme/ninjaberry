@@ -2,14 +2,14 @@
 # coding=utf8
 
 import RPi.GPIO as GPIO
-import spidev as SPI
-import SSD1306
 import smbus
 import time
 
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
+
+from displays.display_ssd1306 import DisplaySSD1306
 
 from ui.ui_router import UIRouter
 
@@ -26,17 +26,12 @@ class UI:
     # Raspberry Pi pin configuration:
     KEY = [20, 21]
 
-    RST = 19
-    DC = 16
-    busId = 0
-    deviceId = 0
-
     bus = smbus.SMBus(1)
     address = 0x20
 
     def __init__(self):
         # 128x32 display with hardware SPI:
-        self.disp = SSD1306.SSD1306(rst=self.RST,dc=self.DC,spi=SPI.SpiDev(self.busId,self.deviceId))
+        self.disp = DisplaySSD1306()
         self.disp.begin()
         self.width = self.disp.width
         self.height = self.disp.height

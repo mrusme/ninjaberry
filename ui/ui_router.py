@@ -2,8 +2,6 @@
 # coding=utf8
 
 import RPi.GPIO as GPIO
-import spidev as SPI
-import SSD1306
 import smbus
 import time
 
@@ -14,11 +12,6 @@ from PIL import ImageDraw
 class UIRouter:
     # Raspberry Pi pin configuration:
     KEY = [20, 21]
-
-    RST = 19
-    DC = 16
-    busId = 0
-    deviceId = 0
 
     bus = smbus.SMBus(1)
     address = 0x20
