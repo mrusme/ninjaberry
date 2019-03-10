@@ -67,7 +67,7 @@ class Bettercap:
         print('Sleeping ...')
         time.sleep(5)
         print('Reading ...')
-        stdout = self._read(bc)
+        stdout = self._read()
 
         aps = []
         matches = re.finditer(regex, stdout, re.UNICODE | re.MULTILINE)
