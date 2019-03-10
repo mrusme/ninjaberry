@@ -64,6 +64,9 @@ class UIRouter:
 
     def route(self, view = None, event = None):
         if view != None:
+            if self._view != view:
+                self._selected = 0
+                self._hselected = 0
             self._view = view
         else:
             view = self._view
