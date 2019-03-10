@@ -2,6 +2,7 @@
 # coding=utf8
 
 import time
+import threading
 
 from PIL import Image
 from PIL import ImageFont
@@ -17,6 +18,7 @@ from ui.ui_list import UIList
 
 from partials.partial_menu import PartialMenu
 
+from bettercap import Bettercap
 from helpers.system import getAvailableIfaces
 
 class ViewWifiScanAps(View):
@@ -39,8 +41,33 @@ class ViewWifiScanAps(View):
             }
         ]
 
+        self._bettercap = Bettercap()
+        self._thread_scan_aps = None
+        self._scanned_aps = []
+
     def callback(self, screen, event = None):
-        draw = ImageDraw.Draw(screen)
+        print('scan aps')
+        if len(self._scanned_aps) > 0:
+            ap_list = []
+            for scanned_ap in self._scanned_aps:
+                ap_list.append({
+                    'id': scanned_ap['bssid'],
+                    'label': scanned_ap['ssid']
+                })
+            self._view[1]['element'].entries = ap_list
 
     def event(self, element_id, event, next, payload={}):
+        print('WifiScanAps Event:')
+        print(event)
+        print(payload)
         self._partial_menu.event(element_id=element_id, event=event, next=next, payload=payload)
+        if event == 'display':
+            self._bettercap.iface = payload['args']['iface']
+            self._bettercap.start()
+            self._thread_scan_aps = threading.Thread(target=self.thread_bettercap_scan_aps, args=())
+            self._thread_scan_aps.daemon = True
+            self._thread_scan_aps.start()
+
+    def thread_bettercap_scan_aps(self):
+        self._scanned_aps = self._bettercap.scan_aps()
+        return self._scanned_aps
