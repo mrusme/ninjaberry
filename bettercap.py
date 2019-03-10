@@ -10,6 +10,14 @@ class Bettercap:
         self._bettercap = None
         self._iface = iface
 
+    @property
+    def iface(self):
+        return self._iface
+
+    @iface.setter
+    def iface(self, value):
+        self._iface = value
+
     def start(self):
         if self._bettercap == None:
             self._bettercap = Popen(['bettercap', '-iface', self._iface, '-no-colors', '-no-history'], shell=False, cwd='/tmp', encoding='utf-8', bufsize=-1, stdout=PIPE, stdin=PIPE, stderr=STDOUT)
