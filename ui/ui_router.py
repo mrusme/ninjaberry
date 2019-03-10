@@ -55,6 +55,10 @@ class UIRouter:
         elif event == 'blurred':
             self._focused = None
             return self.route(event=event)
+        else:
+            print('element_event_handler')
+            print(event)
+            self._view_instances[self._view].event(element_id=element_id, event=event, next=next, payload=payload)
 
         return True
 
