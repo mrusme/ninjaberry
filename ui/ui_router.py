@@ -51,7 +51,10 @@ class UIRouter:
 
     def element_event_handler(self, element_id, event, next, payload={}):
         if event == 'navigate':
-            return self.route(view=payload['to'])
+            if 'args' in payload:
+                return self.route(view=payload['to'], args=payload['args'])
+            else:
+                return self.route(view=payload['to'])
         elif event == 'blurred':
             self._focused = None
             return self.route(event=event)
@@ -62,9 +65,11 @@ class UIRouter:
 
         return True
 
-    def route(self, view = None, event = None):
+    def route(self, view = None, event = None, args={}):
+        view_changed = False
         if view != None:
             if self._view != view:
+                view_changed = True
                 self._selected = 0
                 self._hselected = 0
             self._view = view
@@ -77,6 +82,8 @@ class UIRouter:
             self._outputs[self._default_output].short()
 
         if view in self._view_instances:
+            if view_changed == True:
+                self._view_instances[view].event(element_id='view', event='display', next=None, payload={ 'args': args })
             self._view_instances[view].callback(screen=screen_local, event=event)
 
         self.navigation(view=view, event=event)

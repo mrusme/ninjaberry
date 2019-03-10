@@ -65,4 +65,4 @@ class ViewWifi(View):
         self._partial_menu.event(element_id=element_id, event=event, next=next, payload=payload)
 
         if element_id == 'button_scan_aps' and event == 'clicked':
-            return self._event_handler(element_id=element_id, event='navigate', next=None, payload={ 'to': 'wifi_scan_aps' })
+            return self._event_handler(element_id=element_id, event='navigate', next=None, payload={ 'to': 'wifi_scan_aps', 'args': { 'iface': self._view[2]['element'].selected_id } })
