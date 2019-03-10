@@ -7,13 +7,15 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
+from views.view import View
+
 from ui.ui_animation import UIAnimation
 from ui.ui_button import UIButton
 from ui.ui_label import UILabel
 from ui.ui_line import UILine
 from ui.ui_list import UIList
 
-class ViewLogo:
+class ViewLogo(View):
     def __init__(self, resources, event_handler):
         self._resources = resources
         self._event_handler = event_handler
@@ -38,9 +40,10 @@ class ViewLogo:
             }
         ]
 
-    @property
-    def view(self):
-        return self._view
+        self._rounds = 0
 
     def callback(self, screen, event = None):
+        if self._rounds >= 12:
+            return self._event_handler(element_id='view_logo', event='navigate', next=None, payload={ 'to': 'wifi' })
         self._view[0]['element'].frame_next()
+        self._rounds = self._rounds + 1
