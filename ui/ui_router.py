@@ -34,7 +34,7 @@ class UIRouter:
             input_instance.event_handler = self.route
 
         self._outputs = outputs
-        self._default_output = 'led1'
+        self._default_output = 'buzzer'
 
     def _refresh_views(self):
         for view_name, view_instance in self._view_instances.items():
