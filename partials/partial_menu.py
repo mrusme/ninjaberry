@@ -23,40 +23,40 @@ class PartialMenu(Partial):
             'id': 'menu',
             'horizontal': [
                 {
-                    'id': 'button_wifi',
+                    'id': 'button_menu_wifi',
                     'element': UIButton(
                         resources = { 'font': self._resources['fonts']['fa_solid'] },
-                        event_handler = (lambda ev, nxt: self._event_handler('button_wifi', ev, nxt)),
+                        event_handler = (lambda ev, nxt: self._event_handler('button_menu_wifi', ev, nxt)),
                         position = [0, 0],
                         size = [15, 14],
                         label = chr(0xf1eb)
                     )
                 },
                 {
-                    'id': 'button_bt',
+                    'id': 'button_menu_bt',
                     'element': UIButton(
                         resources = { 'font': self._resources['fonts']['fa_brands'] },
-                        event_handler = (lambda ev, nxt: self._event_handler('button_bt', ev, nxt)),
+                        event_handler = (lambda ev, nxt: self._event_handler('button_menu_bt', ev, nxt)),
                         position = [16, 0],
                         size = [15, 14],
                         label = chr(0xf294)
                     )
                 },
                 {
-                    'id': 'button_eth',
+                    'id': 'button_menu_eth',
                     'element': UIButton(
                         resources = { 'font': self._resources['fonts']['fa_solid'] },
-                        event_handler = (lambda ev, nxt: self._event_handler('button_eth', ev, nxt)),
+                        event_handler = (lambda ev, nxt: self._event_handler('button_menu_eth', ev, nxt)),
                         position = [32, 0],
                         size = [15, 14],
                         label = chr(0xf796)
                     )
                 },
                 {
-                    'id': 'button_settings',
+                    'id': 'button_menu_settings',
                     'element': UIButton(
                         resources = { 'font': self._resources['fonts']['fa_solid'] },
-                        event_handler = (lambda ev, nxt: self._event_handler('button_settings', ev, nxt)),
+                        event_handler = (lambda ev, nxt: self._event_handler('button_menu_settings', ev, nxt)),
                         position = [48, 0],
                         size = [15, 14],
                         label = chr(0xf013)
@@ -73,3 +73,14 @@ class PartialMenu(Partial):
                 }
             ]
         }
+
+    def event(self, element_id, event, next, payload={}):
+        navigate_to = None
+
+        if element_id == 'button_menu_wifi' and event == 'clicked':
+            navigate_to = 'wifi'
+
+        if navigate_to != None:
+            return self._event_handler(element_id=element_id, event='navigate', next=None, payload={ 'to': navigate_to })
+
+        return True
