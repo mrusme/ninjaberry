@@ -101,8 +101,8 @@ class UIList(UIElement):
             iterator = iterator + 1
 
         available_list_entries = len(oms)
-        visible_index_start = 0
-        visible_index_end = available_list_entries
+        visible_before_index = 0
+        visible_after_index = available_list_entries
 
         if max_visible_list_entries < available_list_entries:
             visible_rest = max_visible_list_entries - 1 # the selected one
