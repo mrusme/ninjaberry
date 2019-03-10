@@ -2,6 +2,7 @@ Ninjaberry
 ==========
 
 ![Ninjaberry](ninjaberry.gif)
+
 *(Short demo of Ninjaberry. Wait for the huge GIF to load...)*
 
 ## Installation
