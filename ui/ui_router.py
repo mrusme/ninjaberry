@@ -10,13 +10,7 @@ from PIL import ImageFont
 from PIL import ImageDraw
 
 class UIRouter:
-    # Raspberry Pi pin configuration:
-    KEY = [20, 21]
-
-    bus = smbus.SMBus(1)
-    address = 0x20
-
-    def __init__(self, display):
+    def __init__(self, display, inputs, outputs):
         self._display = display
         self._display_width = self._display.width
         self._display_height = self._display.height
@@ -27,18 +21,20 @@ class UIRouter:
         self._display.image(self.screen)
         self._display.display()
 
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.KEY, GPIO.IN, GPIO.PUD_UP)
-        for channel in self.KEY:
-            GPIO.add_event_detect(channel, GPIO.BOTH, self.key_handler, bouncetime=400)
-
-        self._view = 'wifi'
+        self._view = 'logo'
         self._view_instances = {}
         self._views = {}
 
         self._selected = 0
         self._hselected = 0
         self._focused = None
+
+        self._inputs = inputs
+        for input_name, input_instance in self._inputs.items():
+            input_instance.event_handler = self.route
+
+        self._outputs = outputs
+        self._default_output = 'led1'
 
     def _refresh_views(self):
         for view_name, view_instance in self._view_instances.items():
@@ -53,51 +49,12 @@ class UIRouter:
         self._view_instances = value
         self._refresh_views()
 
-    def beep_on(self):
-        self.bus.write_byte(self.address,0x7F&self.bus.read_byte(self.address))
-    def beep_off(self):
-        self.bus.write_byte(self.address,0x80|self.bus.read_byte(self.address))
-
-    def led_off(self):
-        self.bus.write_byte(self.address,0x10|self.bus.read_byte(self.address))
-    def led_on(self):
-        self.bus.write_byte(self.address,0xEF&self.bus.read_byte(self.address))
-
-    def key_handler(self, key):
-        event = None
-
-        if key == 20:
-            self.beep_on()
-            time.sleep(0.01)
-            self.beep_off()
-            time.sleep(0.01)
-            event = 'click'
-        else:
-            self.bus.write_byte(self.address, 0x0F|self.bus.read_byte(self.address))
-            value = self.bus.read_byte(self.address) | 0xF0
-
-            if value == 0xF7:
-                event = 'right'
-            elif value == 0xFB:
-                event = 'down'
-            elif value == 0xFD:
-                event = 'up'
-            elif value == 0xFE:
-                event = 'left'
-            elif value == 0xFF:
-                event = None
-            while value != 0xFF:
-                self.bus.write_byte(self.address, 0x0F|self.bus.read_byte(self.address))
-                value = self.bus.read_byte(self.address) | 0xF0
-                time.sleep(0.01)
-
-        if event != None:
-            self.route(event=event)
-
-    def element_event_handler(self, element_id, event, next):
-        if event == 'blurred':
+    def element_event_handler(self, element_id, event, next, payload={}):
+        if event == 'navigate':
+            return self.route(view=payload['to'])
+        elif event == 'blurred':
             self._focused = None
-            self.route(event=event)
+            return self.route(event=event)
 
         return True
 
@@ -108,6 +65,9 @@ class UIRouter:
             view = self._view
 
         screen_local = Image.new('1', (self._display_width, self._display_height))
+
+        if event == 'click':
+            self._outputs[self._default_output].short()
 
         if view in self._view_instances:
             self._view_instances[view].callback(screen=screen_local, event=event)
@@ -197,5 +157,4 @@ class UIRouter:
         return screen
 
     def destroy(self):
-        GPIO.cleanup()
-
+        print('All good')

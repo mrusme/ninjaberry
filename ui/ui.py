@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # coding=utf8
 
-import RPi.GPIO as GPIO
-import smbus
 import time
 
 from PIL import Image
@@ -10,6 +8,11 @@ from PIL import ImageFont
 from PIL import ImageDraw
 
 from displays.display_ssd1306 import DisplaySSD1306
+
+from inputs.input_generic import InputGeneric
+
+from outputs.output_buzzer import OutputBuzzer
+from outputs.output_led import OutputLED
 
 from ui.ui_router import UIRouter
 
@@ -23,27 +26,27 @@ from views.view_logo import ViewLogo
 from views.view_wifi import ViewWifi
 
 class UI:
-    # Raspberry Pi pin configuration:
-    KEY = [20, 21]
-
-    bus = smbus.SMBus(1)
-    address = 0x20
-
     def __init__(self):
-        # 128x32 display with hardware SPI:
-        self.disp = DisplaySSD1306()
-        self.disp.begin()
-        self.width = self.disp.width
-        self.height = self.disp.height
-        self.screen = Image.new('1', (self.width, self.height))
-        self.disp.clear()
-        self.disp.image(self.screen)
-        self.disp.display()
+        self._display = DisplaySSD1306()
+        self._display.begin()
+        self._screen = Image.new('1', (self._display.width, self._display.height))
+        self._display.clear()
+        self._display.image(self._screen)
+        self._display.display()
 
-        self.resources = {
+        self._inputs = {
+            'generic': InputGeneric()
+        }
+
+        self._outputs = {
+            'buzzer': OutputBuzzer(),
+            'led1': OutputLED()
+        }
+
+        self._resources = {
             'display': {
-                'width': self.disp.width,
-                'height': self.disp.height
+                'width': self._display.width,
+                'height': self._display.height
             },
             'fonts': {
                 'hack': {
@@ -69,16 +72,21 @@ class UI:
             }
         }
 
-        self.router = UIRouter(self.disp)
-        self.router.views = {
-            'logo': ViewLogo(resources=self.resources, event_handler=self.router.element_event_handler),
-            'wifi': ViewWifi(resources=self.resources, event_handler=self.router.element_event_handler)
+        self._router = UIRouter(display=self._display, inputs=self._inputs, outputs=self._outputs)
+        self._router.views = {
+            'logo': ViewLogo(resources=self._resources, event_handler=self._router.element_event_handler),
+            'wifi': ViewWifi(resources=self._resources, event_handler=self._router.element_event_handler)
         }
 
-    def destroy():
-        self.router.destroy()
+    def destroy(self):
+        self._router.destroy()
+        for input_name, input_instance in self._inputs.items():
+            input_instance.destroy()
+        for output_name, output_instance in self._outputs.items():
+            output_instance.destroy()
+        self._display.destroy()
 
     def display(self):
         while True:
-            self.router.route()
+            self._router.route()
             time.sleep(0.1)
