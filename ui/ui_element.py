@@ -30,6 +30,22 @@ class UIElement:
         return True
 
     @property
+    def position(self):
+        return self._position
+
+    @position.setter
+    def position(self, value):
+        self._position = value
+
+    @property
+    def size(self):
+        return self._size
+
+    @size.setter
+    def size(self, value):
+        self._size = value
+
+    @property
     def can_focus(self):
         return self._can_focus
 

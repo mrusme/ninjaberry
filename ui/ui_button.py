@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # coding=utf8
 
-from ui_element import UIElement
+from ui.ui_element import UIElement
+from PIL import ImageDraw
 import math
 
 class UIButton(UIElement):
@@ -22,22 +23,6 @@ class UIButton(UIElement):
         return True
 
     @property
-    def position(self):
-        return self._position
-
-    @position.setter
-    def position(self, value):
-        self._position = value
-
-    @property
-    def size(self):
-        return self._size
-
-    @size.setter
-    def size(self, value):
-        self._size = value
-
-    @property
     def label(self):
         return self._label
 
@@ -45,8 +30,8 @@ class UIButton(UIElement):
     def label(self, value):
         self._label = value
 
-    def render(self, draw):
-        iterator = 0
+    def render(self, screen):
+        draw = ImageDraw.Draw(screen)
 
         button_x = self._position[0]
         button_y = self._position[1]
@@ -67,4 +52,4 @@ class UIButton(UIElement):
             draw.rectangle([button_x, button_y, button_w_abs, button_h_abs], fill=0, outline=None, width=0)
             draw.text((label_x, label_y), self._label, font=self._resources['font']['ttf'], fill=255)
 
-        return draw
+        return screen

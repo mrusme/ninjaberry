@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # coding=utf8
 
-from ui_element import UIElement
+from ui.ui_element import UIElement
+from PIL import ImageDraw
 import math
 
 class UIList(UIElement):
@@ -26,22 +27,6 @@ class UIList(UIElement):
             self.blur()
 
         return True
-
-    @property
-    def position(self):
-        return self._position
-
-    @position.setter
-    def position(self, value):
-        self._position = value
-
-    @property
-    def size(self):
-        return self._size
-
-    @size.setter
-    def size(self, value):
-        self._size = value
 
     @property
     def entries(self):
@@ -75,7 +60,8 @@ class UIList(UIElement):
 
         return self._selected
 
-    def render(self, draw):
+    def render(self, screen):
+        draw = ImageDraw.Draw(screen)
         iterator = 0
 
         list_x = self._position[0]
@@ -152,4 +138,4 @@ class UIList(UIElement):
         if self._has_highlight is True:
             draw.rectangle([list_x, list_y, list_w_abs, list_h_abs], outline=255, width=1)
 
-        return draw
+        return screen
