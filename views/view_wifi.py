@@ -17,6 +17,7 @@ from ui.ui_list import UIList
 
 from partials.partial_menu import PartialMenu
 
+from bettercap import Bettercap
 from helpers.system import getAvailableIfaces
 
 class ViewWifi(View):
@@ -58,6 +59,8 @@ class ViewWifi(View):
             }
         ]
 
+        self._bettercap = self._resources['external']['bettercap']
+
     def callback(self, screen, event = None):
         return True
 
@@ -65,5 +68,15 @@ class ViewWifi(View):
         self._partial_menu.event(element_id=element_id, event=event, next=next, payload=payload)
 
         if element_id == 'button_scan_aps' and event == 'clicked':
-            return self._event_handler(element_id=element_id, event='navigate', next=None, payload={ 'to': 'wifi_scan_aps', 'args': { 'iface': self._view[2]['element'].selected_id } })
+            selected_iface = self._view[2]['element'].selected_id
+            self._bettercap.iface = selected_iface
+            self._bettercap.start()
 
+            return self._event_handler(element_id=element_id, event='navigate', next=None, payload={ 'to': 'wifi_scan_aps', 'args': { 'iface': selected_iface, 'bettercap': self._bettercap } })
+        elif event == 'conceal':
+            if 'to' in payload and payload['to'] != 'wifi_scan_aps':
+                self._bettercap.stop()
+        elif event == 'destroy':
+            self._bettercap.stop()
+
+        return True

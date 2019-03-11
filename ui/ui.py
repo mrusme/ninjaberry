@@ -27,9 +27,10 @@ from views.view_under_construction import ViewUnderConstruction
 
 from views.view_wifi import ViewWifi
 from views.view_wifi_scan_aps import ViewWifiScanAps
+from views.view_wifi_ap_actions import ViewWifiApActions
 
 class UI:
-    def __init__(self):
+    def __init__(self, external_resources = {}):
         self._display = DisplaySSD1306()
         self._display.begin()
         self._screen = Image.new('1', (self._display.width, self._display.height))
@@ -72,7 +73,8 @@ class UI:
                     'size': 11,
                     'ttf': ImageFont.truetype('assets/fa-brands-400.ttf', 11)
                 }
-            }
+            },
+            'external': external_resources
         }
 
         self._router = UIRouter(display=self._display, inputs=self._inputs, outputs=self._outputs)
@@ -80,6 +82,7 @@ class UI:
             'logo': ViewLogo(resources=self._resources, event_handler=self._router.element_event_handler),
             'wifi': ViewWifi(resources=self._resources, event_handler=self._router.element_event_handler),
             'wifi_scan_aps': ViewWifiScanAps(resources=self._resources, event_handler=self._router.element_event_handler),
+            'wifi_ap_actions': ViewWifiApActions(resources=self._resources, event_handler=self._router.element_event_handler),
             'bt': ViewUnderConstruction(resources=self._resources, event_handler=self._router.element_event_handler),
             'eth': ViewUnderConstruction(resources=self._resources, event_handler=self._router.element_event_handler),
             'settings': ViewUnderConstruction(resources=self._resources, event_handler=self._router.element_event_handler)

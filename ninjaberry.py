@@ -3,13 +3,20 @@
 
 import sys
 from ui.ui import UI
+from bettercap import Bettercap
 
-ui = UI()
+bettercap = Bettercap()
+
+ui = UI(external_resources={ 'bettercap': bettercap })
+
+def destroy():
+    ui.destroy()
+    bettercap.stop()
 
 def main():
     ui.display()
     # ^ that's a loop
-    ui.destroy()
+    destroy()
     print("Leaving main()")
 
 if __name__ == "__main__":
@@ -17,5 +24,5 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         print("\nExit\n")
-        ui.destroy()
+        destroy()
         sys.exit(0)

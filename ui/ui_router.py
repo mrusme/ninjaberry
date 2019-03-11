@@ -177,4 +177,6 @@ class UIRouter:
         return screen
 
     def destroy(self):
+        for view_name, view_instance in self._view_instances.items():
+            view_instance.event(element_id='view', event='destroy', next=None, payload={})
         print('All good')

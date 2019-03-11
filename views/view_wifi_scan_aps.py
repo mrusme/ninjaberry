@@ -41,7 +41,7 @@ class ViewWifiScanAps(View):
             }
         ]
 
-        self._bettercap = Bettercap()
+        self._bettercap = None
         self._thread_scan_aps = None
         self._scanned_aps = []
 
@@ -52,7 +52,8 @@ class ViewWifiScanAps(View):
             for scanned_ap in self._scanned_aps:
                 ap_list.append({
                     'id': scanned_ap['bssid'],
-                    'label': scanned_ap['ssid']
+                    'label': scanned_ap['clients'] + ' | ' + scanned_ap['ssid'],
+                    'args': scanned_ap
                 })
             self._view[1]['element'].entries = ap_list
         return True
@@ -63,18 +64,25 @@ class ViewWifiScanAps(View):
         print(payload)
         self._partial_menu.event(element_id=element_id, event=event, next=next, payload=payload)
         if event == 'display':
-            self._bettercap.iface = payload['args']['iface']
-            self._bettercap.start()
+            self._bettercap = payload['args']['bettercap']
+            # TODO: Handle errors with bettercap
             self._thread_scan_aps = threading.Thread(target=self.thread_bettercap_scan_aps, args=())
             self._thread_scan_aps.daemon = True
             self._thread_scan_aps.start()
-        elif event == 'destroy':
-            print('Destroying WifiScanAps ..')
-            self._thread_scan_aps.join()
-            self._bettercap.stop()
-            self._scanned_aps = []
-            print('Destroyed')
+        elif event == 'picked':
+            ssid = payload['id']
+            ap = payload['args']
+            return self._event_handler(element_id=element_id, event='navigate', next=None, payload={ 'to': 'wifi_ap_actions', 'args': { 'bettercap': self._bettercap, 'ap': ap } })
+        elif event == 'conceal':
+            if 'to' in payload:
+                if payload['to'] != 'wifi_ap_actions':
+                    print('Destroying WifiScanAps ..')
+                    self._thread_scan_aps.join()
+                    self._scanned_aps = []
+                    print('Destroyed')
+        return True
 
     def thread_bettercap_scan_aps(self):
-        self._scanned_aps = self._bettercap.scan_aps()
+        if self._bettercap != None:
+            self._scanned_aps = self._bettercap.scan_aps()
         return self._scanned_aps
