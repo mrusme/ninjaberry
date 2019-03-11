@@ -6,6 +6,7 @@ import re
 import time
 from datetime import datetime
 import math
+import os
 
 class Bettercap:
     END_OF_OUTPUT = '%NINJAEND%'
@@ -66,6 +67,9 @@ class Bettercap:
         regextype = type(re.compile(''))
 
         while keep_reading:
+            if self._bettercap == None:
+                print('Whoops. Bettercap apparently just died. I better quit now.')
+                break
             stdout_line = self._bettercap.stdout.readline()
             if type(stop_on) is str:
                 if stdout_line == stop_on:
@@ -83,12 +87,18 @@ class Bettercap:
 
     def _execute(self, command):
         print('Writing command:' + command)
+
+        if self._bettercap == None:
+            print('Bettercap is not running. Starting ...')
+            self.start()
+            time.sleep(1)
+
         self._bettercap.stdin.write(command)
         self._bettercap.stdin.flush()
         print('Command executed!')
         return True
 
-    def scan_aps(self):
+    def scan_aps(self, timeout):
         regex = r'^\u2502\s([\+\-][0-9]{1,4})\sdBm\s\u2502\s([a-f0-9\:]{17})\s\u2502\s([^│;]+)\s\u2502\s([^│;]*)\s+\u2502\s(2\.0|1\.0|)(\s*\([a-zA-Z ]+\))?\s+\u2502\s([0-9]{1,3})\s+\u2502\s([0-9]{0,10})\s+\u2502\s([^│;]*)\s+\u2502\s([^│;]*)\s+\u2502\s([^│;]*)\s+\u2502'
         index_dbm = 1
         index_bssid = 2
@@ -103,9 +113,9 @@ class Bettercap:
         index_seen = 11
 
         # TODO: Change ticker.period & time.sleep
-        self._execute('set wifi.show.sort clients desc; set ticker.period 5; set ticker.commands "clear; wifi.show; !echo \'' + self.END_OF_OUTPUT + '\'; wifi.recon off; ticker off;"; wifi.recon on; ticker on;\n')
-        print('Sleeping ...')
-        time.sleep(5)
+        self._execute('set wifi.show.sort clients desc; set ticker.period ' + timeout + '; set ticker.commands "clear; wifi.show; !echo \'' + self.END_OF_OUTPUT + '\'; wifi.recon off; ticker off;"; wifi.recon on; ticker on;\n')
+        print('Sleeping ' + timeout + '...')
+        time.sleep(int(timeout))
         stdout = self._read(stop_on=(self.END_OF_OUTPUT + '\n'), retrieve_stdout=True)
 
         aps = []
@@ -137,7 +147,7 @@ class Bettercap:
         except FileExistsError:
             pass
 
-        capture_file = self.CAPTURE_LOCATION + '/' + math.floor(datetime.now().timestamp()) + '.pcap'
+        capture_file = self.CAPTURE_LOCATION + '/' + str(math.floor(datetime.now().timestamp())) + '.pcap'
 
         self._execute('set net.sniff.verbose true; set net.sniff.filter ether proto 0x888e; set net.sniff.output ' + capture_file + '; net.sniff on; wifi.recon.channel ' + channel + '; wifi.recon on; wifi.recon ' + bssid + '; wifi.deauth ' + bssid + ';\n')
         self._read(stop_on=re.compile(r'.* captured .* handshake .*'), retrieve_stdout=False)
