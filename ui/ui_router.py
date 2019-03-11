@@ -67,6 +67,8 @@ class UIRouter:
 
     def route(self, view = None, event = None, args={}):
         view_changed = False
+        view_previous = self._view
+
         if view != None:
             if self._view != view:
                 view_changed = True
@@ -81,19 +83,27 @@ class UIRouter:
         if event == 'click':
             self._outputs[self._default_output].short()
 
+        continue_navigation = True
         if view in self._view_instances:
             if view_changed == True:
                 self._view_instances[view].event(element_id='view', event='display', next=None, payload={ 'args': args })
-            self._view_instances[view].callback(screen=screen_local, event=event)
+                if view_previous != None:
+                    self._view_instances[view].event(element_id='view', event='destroy', next=None, payload={})
 
-        self.navigation(view=view, event=event)
-        screen_local = self.render(screen=screen_local, view=view)
+            continue_navigation = self._view_instances[view].callback(screen=screen_local, event=event)
 
-        if screen_local != self.screen:
-            self.screen = screen_local
-            self._display.clear()
-            self._display.image(self.screen)
-            self._display.display()
+        if continue_navigation == True:
+            print('Navigating')
+            print(view)
+            print(event)
+            self.navigation(view=view, event=event)
+            screen_local = self.render(screen=screen_local, view=view)
+
+            if screen_local != self.screen:
+                self.screen = screen_local
+                self._display.clear()
+                self._display.image(self.screen)
+                self._display.display()
 
     def navigation(self, view, event, recursion=0):
         if self._focused == None:

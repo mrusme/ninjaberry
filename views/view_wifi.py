@@ -59,7 +59,7 @@ class ViewWifi(View):
         ]
 
     def callback(self, screen, event = None):
-        draw = ImageDraw.Draw(screen)
+        return True
 
     def event(self, element_id, event, next, payload={}):
         self._partial_menu.event(element_id=element_id, event=event, next=next, payload=payload)

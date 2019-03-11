@@ -55,6 +55,7 @@ class ViewWifiScanAps(View):
                     'label': scanned_ap['ssid']
                 })
             self._view[1]['element'].entries = ap_list
+        return True
 
     def event(self, element_id, event, next, payload={}):
         print('WifiScanAps Event:')
@@ -67,6 +68,10 @@ class ViewWifiScanAps(View):
             self._thread_scan_aps = threading.Thread(target=self.thread_bettercap_scan_aps, args=())
             self._thread_scan_aps.daemon = True
             self._thread_scan_aps.start()
+        elif event == 'destroy':
+            self._thread_scan_aps.join()
+            self._bettercap.stop()
+
 
     def thread_bettercap_scan_aps(self):
         self._scanned_aps = self._bettercap.scan_aps()

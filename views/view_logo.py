@@ -44,6 +44,9 @@ class ViewLogo(View):
 
     def callback(self, screen, event = None):
         if self._rounds >= 12:
-            return self._event_handler(element_id='view_logo', event='navigate', next=None, payload={ 'to': 'wifi' })
+            print('Calling wifi view')
+            self._event_handler(element_id='view_logo', event='navigate', next=None, payload={ 'to': 'wifi' })
+            return False
         self._view[0]['element'].frame_next()
         self._rounds = self._rounds + 1
+        return True
