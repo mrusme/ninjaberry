@@ -46,8 +46,8 @@ class ViewWifiScanAps(View):
         self._scanned_aps = []
 
     def callback(self, screen, event = None):
-        print('scan aps')
-        if len(self._scanned_aps) > 0:
+        if len(self._scanned_aps) > 0 and len(self._view[1]['element'].entries) != len(self._scanned_aps):
+            print('Setting aps')
             ap_list = []
             for scanned_ap in self._scanned_aps:
                 ap_list.append({
@@ -69,9 +69,11 @@ class ViewWifiScanAps(View):
             self._thread_scan_aps.daemon = True
             self._thread_scan_aps.start()
         elif event == 'destroy':
+            print('Destroying WifiScanAps ..')
             self._thread_scan_aps.join()
             self._bettercap.stop()
-
+            self._scanned_aps = []
+            print('Destroyed')
 
     def thread_bettercap_scan_aps(self):
         self._scanned_aps = self._bettercap.scan_aps()
