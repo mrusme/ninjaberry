@@ -81,6 +81,12 @@ class UI:
             'wifi_scan_aps': ViewWifiScanAps(resources=self._resources, event_handler=self._router.element_event_handler)
         }
 
+    def display(self):
+        while True:
+            print('Calling route()')
+            self._router.route()
+            time.sleep(0.1)
+
     def destroy(self):
         self._router.destroy()
         for input_name, input_instance in self._inputs.items():
@@ -88,8 +94,3 @@ class UI:
         for output_name, output_instance in self._outputs.items():
             output_instance.destroy()
         self._display.destroy()
-
-    def display(self):
-        while True:
-            self._router.route()
-            time.sleep(0.1)
