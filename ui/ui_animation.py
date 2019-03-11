@@ -18,12 +18,12 @@ class UIAnimation(UIElement):
             self._frames.append(Image.open(frame_file).convert('1'))
         self._current_frame = 0
 
-    def event(self, event, next):
+    def event(self, event, next, payload={}):
         print('ANIMATION EVENT')
         print(event)
 
         if event == 'click':
-            self.propagate('clicked')
+            self.propagate(event='clicked')
 
         return True
 

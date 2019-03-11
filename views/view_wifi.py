@@ -39,7 +39,7 @@ class ViewWifi(View):
                 'id': 'list_ifaces',
                 'element': UIList(
                     resources = { 'font': self._resources['fonts']['hack'] },
-                    event_handler = (lambda ev, nxt: self._event_handler('list_ifaces', ev, nxt)),
+                    event_handler = (lambda event, next, payload={}: self._event_handler(element_id='list_ifaces', event=event, next=next, payload=payload)),
                     position = [0, 30],
                     size = [(self._resources['display']['width'] - 1), 10],
                     entries = getAvailableIfaces(),
@@ -50,7 +50,7 @@ class ViewWifi(View):
                 'id': 'button_scan_aps',
                 'element': UIButton(
                     resources = { 'font': self._resources['fonts']['hack'] },
-                    event_handler = (lambda ev, nxt: self._event_handler('button_scan_aps', ev, nxt)),
+                    event_handler = (lambda event, next, payload={}: self._event_handler(element_id='button_scan_aps', event=event, next=next, payload=payload)),
                     position = [0, (self._resources['display']['height'] - self._resources['fonts']['hack']['size'] - 1)],
                     size = [(self._resources['display']['width'] - 1), self._resources['fonts']['hack']['size']],
                     label = 'Scan for APs'

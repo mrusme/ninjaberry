@@ -15,7 +15,7 @@ class UIElement:
         self._can_highlight = can_highlight
         self._has_highlight = False
 
-    def propagate(self, ev):
+    def propagate(self, event, payload={}):
         for event_handler_index, event_handler in enumerate(self._event_handlers):
             if event_handler != None:
                 next_event_handler_index = event_handler_index + 1
@@ -24,7 +24,7 @@ class UIElement:
                 if next_event_handler_index < len(self._event_handlers):
                     next_event_handler = self._event_handlers[next_event_handler_index]
 
-                continue_handling = event_handler(ev, next_event_handler)
+                continue_handling = event_handler(event=event, next=next_event_handler, payload=payload)
                 if continue_handling is False:
                     return False
         return True
@@ -66,14 +66,14 @@ class UIElement:
             return False
 
         self._has_focus = True
-        return self.propagate('focused')
+        return self.propagate(event='focused')
 
     def blur(self):
         if self._can_focus is False or self._has_focus is False:
             return False
 
         self._has_focus = False
-        was_blurred = self.propagate('blurred')
+        was_blurred = self.propagate(event='blurred')
 
         if was_blurred == False:
             self._has_focus = True
@@ -86,11 +86,11 @@ class UIElement:
             return False
 
         self._has_highlight = True
-        return self.propagate('highlighted')
+        return self.propagate(event='highlighted')
 
     def lowlight(self):
         if self._can_highlight is False is True or self._has_highlight is False:
             return False
 
         self._has_highlight = False
-        return self.propagate('lowlighted')
+        return self.propagate(event='lowlighted')

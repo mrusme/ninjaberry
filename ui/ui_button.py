@@ -13,12 +13,12 @@ class UIButton(UIElement):
         self._size = size
         self._label = label
 
-    def event(self, event, next):
+    def event(self, event, next, payload={}):
         print('BUTTON EVENT')
         print(event)
 
         if event == 'click':
-            self.propagate('clicked')
+            self.propagate(event='clicked')
 
         return True
 

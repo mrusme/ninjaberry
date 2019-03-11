@@ -24,7 +24,7 @@ class ViewUnderConstruction(View):
                 'id': 'animation_under_construction',
                 'element': UIAnimation(
                     resources = {},
-                    event_handler = (lambda ev, nxt: self._event_handler('animation_under_construction', ev, nxt)),
+                    event_handler = (lambda event, next, payload={}: self._event_handler(element_id='animation_under_construction', event=event, next=next, payload=payload)),
                     position = [0, 0],
                     size = [(self._resources['display']['width'] - 1), (self._resources['display']['height'] - 1)],
                     frame_files = ['assets/greatwave.bmp']

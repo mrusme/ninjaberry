@@ -32,7 +32,7 @@ class ViewWifiScanAps(View):
                 'id': 'list_aps',
                 'element': UIList(
                     resources = { 'font': self._resources['fonts']['hack'] },
-                    event_handler = (lambda ev, nxt: self._event_handler('list_aps', ev, nxt)),
+                    event_handler = (lambda event, next, payload={}: self._event_handler(element_id='list_aps', event=event, next=next, payload=payload)),
                     position = [0, 16],
                     size = [(self._resources['display']['width'] - 1), (self._resources['display']['height'] - 16 - 1)],
                     entries = [],

@@ -14,7 +14,7 @@ class UILine(UIElement):
         self._size = size
         self._fill = fill
 
-    def event(self, event, next):
+    def event(self, event, next, payload={}):
         print('LINE EVENT')
         print(event)
 

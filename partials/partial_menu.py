@@ -26,7 +26,7 @@ class PartialMenu(Partial):
                     'id': 'button_menu_wifi',
                     'element': UIButton(
                         resources = { 'font': self._resources['fonts']['fa_solid'] },
-                        event_handler = (lambda ev, nxt: self._event_handler('button_menu_wifi', ev, nxt)),
+                        event_handler = (lambda event, next, payload={}: self._event_handler(element_id='button_menu_wifi', event=event, next=next, payload=payload)),
                         position = [0, 0],
                         size = [15, 14],
                         label = chr(0xf1eb)
@@ -36,7 +36,7 @@ class PartialMenu(Partial):
                     'id': 'button_menu_bt',
                     'element': UIButton(
                         resources = { 'font': self._resources['fonts']['fa_brands'] },
-                        event_handler = (lambda ev, nxt: self._event_handler('button_menu_bt', ev, nxt)),
+                        event_handler = (lambda event, next, payload={}: self._event_handler(element_id='button_menu_bt', event=event, next=next, payload=payload)),
                         position = [16, 0],
                         size = [15, 14],
                         label = chr(0xf294)
@@ -46,7 +46,7 @@ class PartialMenu(Partial):
                     'id': 'button_menu_eth',
                     'element': UIButton(
                         resources = { 'font': self._resources['fonts']['fa_solid'] },
-                        event_handler = (lambda ev, nxt: self._event_handler('button_menu_eth', ev, nxt)),
+                        event_handler = (lambda event, next, payload={}: self._event_handler(element_id='button_menu_eth', event=event, next=next, payload=payload)),
                         position = [32, 0],
                         size = [15, 14],
                         label = chr(0xf796)
@@ -56,7 +56,7 @@ class PartialMenu(Partial):
                     'id': 'button_menu_settings',
                     'element': UIButton(
                         resources = { 'font': self._resources['fonts']['fa_solid'] },
-                        event_handler = (lambda ev, nxt: self._event_handler('button_menu_settings', ev, nxt)),
+                        event_handler = (lambda event, next, payload={}: self._event_handler(element_id='button_menu_settings', event=event, next=next, payload=payload)),
                         position = [48, 0],
                         size = [15, 14],
                         label = chr(0xf013)

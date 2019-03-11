@@ -14,7 +14,7 @@ class UIList(UIElement):
         self._entries = entries
         self._selected = selected
 
-    def event(self, event, next):
+    def event(self, event, next, payload={}):
         print('LIST EVENT')
         print(event)
 
@@ -23,7 +23,7 @@ class UIList(UIElement):
         elif event == 'up':
             self.select_previous()
         elif event == 'click':
-            self.propagate('picked')
+            self.propagate(event='picked', payload={ 'id': self.selected_id, 'args': self.selected_args })
             self.blur()
 
         return True
