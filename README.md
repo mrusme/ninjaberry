@@ -33,7 +33,34 @@ pip3 install RPi.GPIO spidev Pillow
 python3 ./ninjaberry.py
 ```
 
-Keep in mind that this software is not usable at the moment. Feel free to tinker around, but don't expect anything to be working as it is pre-0.1 as of right now.
+Keep in mind that this is experimental software at the moment. Feel free to tinker around, but don't expect anything to be working as it is pre-0.1 as of right now.
+
+## Features
+
+So far Ninjaberry can:
+
+### WiFi
+
+- Scan for APs for a custom amount of time, through a configurable iface
+- Display a list of all found APs, allow you to pick one
+- Display information on the selected AP, allowing you to run a handshake scan + deauth
+- Run the handshake scan + deauth
+
+### Bluetooth
+
+- Nothing yet
+
+### Ethernet
+
+- Nothing yet
+
+### Settings
+
+- Nothing to tweak around yet
+
+## Common use cases
+
+If you have commands you usually run with Bettercap, feel free to [create an issue on GitHub](https://github.com/mrusme/ninjaberry/issues/new) and request implementation of those!
 
 ## "Let me tell you..."
 
