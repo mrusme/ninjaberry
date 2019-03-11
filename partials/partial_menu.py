@@ -77,8 +77,15 @@ class PartialMenu(Partial):
     def event(self, element_id, event, next, payload={}):
         navigate_to = None
 
-        if element_id == 'button_menu_wifi' and event == 'clicked':
-            navigate_to = 'wifi'
+        if event == 'clicked':
+            if element_id == 'button_menu_wifi':
+                navigate_to = 'wifi'
+            elif element_id == 'button_menu_bt':
+                navigate_to = 'bt'
+            elif element_id == 'button_menu_eth':
+                navigate_to = 'eth'
+            elif element_id == 'button_menu_settings':
+                navigate_to = 'settings'
 
         if navigate_to != None:
             return self._event_handler(element_id=element_id, event='navigate', next=None, payload={ 'to': navigate_to })
