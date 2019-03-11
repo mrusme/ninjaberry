@@ -28,6 +28,7 @@ from views.view_under_construction import ViewUnderConstruction
 from views.view_wifi import ViewWifi
 from views.view_wifi_scan_aps import ViewWifiScanAps
 from views.view_wifi_ap_actions import ViewWifiApActions
+from views.view_wifi_ap_action_handshake import ViewWifiApActionHandshake
 
 class UI:
     def __init__(self, external_resources = {}):
@@ -83,6 +84,7 @@ class UI:
             'wifi': ViewWifi(resources=self._resources, event_handler=self._router.element_event_handler),
             'wifi_scan_aps': ViewWifiScanAps(resources=self._resources, event_handler=self._router.element_event_handler),
             'wifi_ap_actions': ViewWifiApActions(resources=self._resources, event_handler=self._router.element_event_handler),
+            'wifi_ap_action_handshake': ViewWifiApActionHandshake(resources=self._resources, event_handler=self._router.element_event_handler),
             'bt': ViewUnderConstruction(resources=self._resources, event_handler=self._router.element_event_handler),
             'eth': ViewUnderConstruction(resources=self._resources, event_handler=self._router.element_event_handler),
             'settings': ViewUnderConstruction(resources=self._resources, event_handler=self._router.element_event_handler)
