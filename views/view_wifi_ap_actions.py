@@ -18,7 +18,6 @@ from ui.ui_list import UIList
 
 from partials.partial_menu import PartialMenu
 
-from bettercap import Bettercap
 from helpers.system import getAvailableIfaces
 
 class ViewWifiApActions(View):
@@ -29,11 +28,20 @@ class ViewWifiApActions(View):
         self._view = [
             self._partial_menu.partial,
             {
+                'id': 'label_ap',
+                'element': UILabel(
+                    resources = { 'font': self._resources['fonts']['hack'] },
+                    position = [0, 16],
+                    size = [(self._resources['display']['width'] - 1), self._resources['fonts']['hack']['size']],
+                    label = ''
+                )
+            },
+            {
                 'id': 'button_handshake',
                 'element': UIButton(
                     resources = { 'font': self._resources['fonts']['hack'] },
                     event_handler = (lambda event, next, payload={}: self._event_handler(element_id='button_handshake', event=event, next=next, payload=payload)),
-                    position = [0, 16],
+                    position = [0, (self._resources['display']['height'] - self._resources['fonts']['hack']['size'] - 1)],
                     size = [(self._resources['display']['width'] - 1), self._resources['fonts']['hack']['size']],
                     label = 'Capture handshake'
                 )
@@ -54,6 +62,8 @@ class ViewWifiApActions(View):
         if event == 'display':
             self._bettercap = payload['args']['bettercap']
             self._ap = payload['args']['ap']
+
+            self._view[1]['element'].label = 'SSID: ' + self._ap['ssid'] + '\nBSSID: ' + self._ap['bssid']
         elif event == 'clicked':
             if element_id == 'button_handshake':
                 return self._event_handler(element_id=element_id, event='navigate', next=None, payload={ 'to': 'wifi_ap_action_handshake', 'args': { 'bettercap': self._bettercap, 'ap': self._ap } })
