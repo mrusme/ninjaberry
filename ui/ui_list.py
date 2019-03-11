@@ -54,6 +54,10 @@ class UIList(UIElement):
         (entry_id, entry_label) = self._getIdAndLabelFromEntry(self._entries[self._selected])
         return entry_label
 
+    @property
+    def selected_args(self):
+        return self._getArgsFromEntry(self._entries[self._selected])
+
     def select_previous(self):
         self._selected = self._selected - 1
 
@@ -86,6 +90,12 @@ class UIList(UIElement):
             entry_label = '(DEVELOPER FUCKED UP)'
         return (entry_id, entry_label)
 
+    def _getArgsFromEntry(self, entry):
+        entry_args = None
+        if type(entry) is dict and 'args' in entry:
+            entry_args = entry['args']
+        return entry_args
+
     def render(self, screen):
         draw = ImageDraw.Draw(screen)
         iterator = 0
@@ -115,6 +125,8 @@ class UIList(UIElement):
             entry_string = selector + entry_label
             entry_string_size = self._resources['font']['ttf'].getsize(entry_string)
 
+            entry_args = self._getArgsFromEntry(entry)
+
             w = entry_string_size[0]
             h = entry_string_size[1]
 
@@ -123,6 +135,7 @@ class UIList(UIElement):
                 'selected': selected,
                 'id': entry_id,
                 'label': entry_string,
+                'args': entry_args,
                 'w': w,
                 'h': h
             }
