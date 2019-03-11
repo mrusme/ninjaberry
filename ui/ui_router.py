@@ -87,7 +87,7 @@ class UIRouter:
             if view_changed == True:
                 self._view_instances[view].event(element_id='view', event='display', next=None, payload={ 'args': args })
                 if view_previous != None:
-                    self._view_instances[view_previous].event(element_id='view', event='destroy', next=None, payload={ 'to': view })
+                    self._view_instances[view_previous].event(element_id='view', event='conceal', next=None, payload={ 'to': view })
 
             ret_val = self._view_instances[view].callback(screen=screen_local, event=event)
 
