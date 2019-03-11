@@ -28,7 +28,7 @@ class ViewWifi(View):
         self._view = [
             self._partial_menu.partial,
             {
-                'id': 'label_ssid',
+                'id': 'label_iface',
                 'element': UILabel(
                     resources = { 'font': self._resources['fonts']['hack'] },
                     position = [0, 16],
@@ -41,9 +41,29 @@ class ViewWifi(View):
                 'element': UIList(
                     resources = { 'font': self._resources['fonts']['hack'] },
                     event_handler = (lambda event, next, payload={}: self._event_handler(element_id='list_ifaces', event=event, next=next, payload=payload)),
-                    position = [0, 30],
+                    position = [0, 28],
                     size = [(self._resources['display']['width'] - 1), 10],
                     entries = getAvailableIfaces(),
+                    selected = 0
+                )
+            },
+            {
+                'id': 'label_timeout',
+                'element': UILabel(
+                    resources = { 'font': self._resources['fonts']['hack'] },
+                    position = [0, 38],
+                    size = [(self._resources['display']['width'] - 1), self._resources['fonts']['hack']['size']],
+                    label = 'Number of sec. to scan:'
+                )
+            },
+            {
+                'id': 'list_timeout',
+                'element': UIList(
+                    resources = { 'font': self._resources['fonts']['hack'] },
+                    event_handler = (lambda event, next, payload={}: self._event_handler(element_id='list_timeout', event=event, next=next, payload=payload)),
+                    position = [0, 46],
+                    size = [(self._resources['display']['width'] - 1), 10],
+                    entries = ['5', '10', '30', '60', '120', '240'],
                     selected = 0
                 )
             },
@@ -52,7 +72,7 @@ class ViewWifi(View):
                 'element': UIButton(
                     resources = { 'font': self._resources['fonts']['hack'] },
                     event_handler = (lambda event, next, payload={}: self._event_handler(element_id='button_scan_aps', event=event, next=next, payload=payload)),
-                    position = [0, (self._resources['display']['height'] - self._resources['fonts']['hack']['size'] - 1)],
+                    position = [0, 56],
                     size = [(self._resources['display']['width'] - 1), self._resources['fonts']['hack']['size']],
                     label = 'Scan for APs'
                 )
@@ -72,7 +92,9 @@ class ViewWifi(View):
             self._bettercap.iface = selected_iface
             self._bettercap.start()
 
-            return self._event_handler(element_id=element_id, event='navigate', next=None, payload={ 'to': 'wifi_scan_aps', 'args': { 'iface': selected_iface, 'bettercap': self._bettercap } })
+            selected_timeout = self._view[4]['element'].selected_id
+
+            return self._event_handler(element_id=element_id, event='navigate', next=None, payload={ 'to': 'wifi_scan_aps', 'args': { 'iface': selected_iface, 'timeout': selected_timeout, 'bettercap': self._bettercap } })
         elif event == 'conceal':
             if 'to' in payload and payload['to'] != 'wifi_scan_aps':
                 self._bettercap.stop()
