@@ -6,8 +6,8 @@ from PIL import Image
 import math
 
 class UIAnimation(UIElement):
-    def __init__(self, resources = {}, position = [0, 0], size = [0, 0], frame_files = []):
-        super().__init__(event_handlers = [self.event], can_focus = False, can_highlight = False)
+    def __init__(self, resources = {}, event_handler = None, position = [0, 0], size = [0, 0], frame_files = []):
+        super().__init__(event_handlers = [self.event, event_handler], can_focus = False, can_highlight = False)
         self._resources = resources
         self._position = position
         self._size = size
@@ -21,6 +21,9 @@ class UIAnimation(UIElement):
     def event(self, event, next):
         print('ANIMATION EVENT')
         print(event)
+
+        if event == 'click':
+            self.propagate('clicked')
 
         return True
 

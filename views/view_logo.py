@@ -24,6 +24,7 @@ class ViewLogo(View):
                 'id': 'animation_logo',
                 'element': UIAnimation(
                     resources = {},
+                    event_handler = (lambda ev, nxt: self._event_handler('animation_logo', ev, nxt)),
                     position = [0, 0],
                     size = [(self._resources['display']['width'] - 1), (self._resources['display']['height'] - 1)],
                     frame_files = ['assets/bettercap01.bmp', 'assets/bettercap02.bmp', 'assets/bettercap03.bmp', 'assets/bettercap04.bmp']
