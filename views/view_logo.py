@@ -50,3 +50,6 @@ class ViewLogo(View):
         self._view[0]['element'].frame_next()
         self._rounds = self._rounds + 1
         return True
+
+    def event(self, element_id, event, next, payload={}):
+        return True

@@ -83,7 +83,6 @@ class UI:
 
     def display(self):
         while True:
-            print('Calling route()')
             self._router.route()
             time.sleep(0.1)
 

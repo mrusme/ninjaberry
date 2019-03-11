@@ -88,14 +88,11 @@ class UIRouter:
             if view_changed == True:
                 self._view_instances[view].event(element_id='view', event='display', next=None, payload={ 'args': args })
                 if view_previous != None:
-                    self._view_instances[view].event(element_id='view', event='destroy', next=None, payload={})
+                    self._view_instances[view_previous].event(element_id='view', event='destroy', next=None, payload={})
 
             continue_navigation = self._view_instances[view].callback(screen=screen_local, event=event)
 
         if continue_navigation == True:
-            print('Navigating')
-            print(view)
-            print(event)
             self.navigation(view=view, event=event)
             screen_local = self.render(screen=screen_local, view=view)
 
